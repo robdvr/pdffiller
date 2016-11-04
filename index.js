@@ -12,6 +12,7 @@
         fdf = require('utf8-fdf-generator'),
         _ = require('lodash'),
         fs = require('fs');
+        path = require('path');
 
     var pdffiller = {
 
@@ -108,11 +109,13 @@
         fillFormWithOptions: function( sourceFile, destinationFile, fieldValues, shouldFlatten, tempFDFPath, callback ) {
 
             //Generate the data from the field values.
-            var tempFDFFile =  "data" + (new Date().getTime()) + ".fdf",
+            var folderName = path.dirname(sourceFile);
+            var tempFDFFile =  path.join(folderName, "data" + (new Date().getTime()) + ".fdf"),
                 tempFDF = (typeof tempFDFPath !== "undefined"? tempFDFPath + '/' + tempFDFFile: tempFDFFile),
                 formData = fdf.generator( fieldValues, tempFDF );
 
             var args = [sourceFile, "fill_form", tempFDF, "output", destinationFile];
+
             if (shouldFlatten) {
                 args.push("flatten");
             }
